@@ -5,19 +5,23 @@ import axios from "axios";
 function App() {
   const [file, setFile] = useState();
   const [images, setImages] = useState([]);
-  const handleUpload = async (e) => {
-    e.preventDefault();
-    const formdata = new FormData();
-    formdata.append("file", file);
+const handleUpload = (e) => {
+  e.preventDefault();
+  const formdata = new FormData();
+  formdata.append("file", file);
 
-    try {
-      await axios.post(`${window.location.origin}/upload`, formdata);
-      const response = await axios.get(`${window.location.origin}/getImage`);
+  axios.post(`${window.location.origin}/upload`, formdata)
+    .then(() => {
+      return axios.get(`${window.location.origin}/getImage`);
+    })
+    .then((response) => {
       setImages(response.data.map((item) => item.image));
-    } catch (error) {
+    })
+    .catch((error) => {
       console.log(error);
-    }
-  };
+    });
+};
+
   useEffect(() => {
     axios
       .get(`${window.location.origin}/getImage`)
