@@ -30,21 +30,11 @@ const upload = multer({
     storage: storage
 })
 
-app.post('/upload', upload.single('file'), async (req, res) => {
-    try {
-        if (req.file) {
-            const result = await UserModel.create({ image: req.file.filename });
-        res.json(result);
-            
-        }
-        return res.status(400).json({ error: 'No file uploaded' });
-
-        
-    } catch (error) {
-        console.error('Error uploading file:', error);
-        res.status(500).json({ error: 'Internal Server Error' });
-    }
-});
+app.post('/upload',upload.single('file'),(req,res)=>{
+        UserModel.create({image: req.file.filename})
+        .then(result => res.json(result))
+        .catch(err => console.log(err))
+})
 
 
 
